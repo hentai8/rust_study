@@ -1,5 +1,7 @@
 use std::thread;
 use std::time::Duration;
+use rand::prelude::*;
+use anyhow::*;
 
 #[derive(Debug)]
 struct Test {
@@ -49,6 +51,16 @@ trait Comparable {
 struct Circle {
     radius: f64,
     center: (f64, f64),
+}
+
+fn eq0() -> anyhow::Result<(u64)> {
+    let mut a = 104;
+    let mut b = 518;
+    println!("!!!!");
+    ensure!(a + 10 >= b - 4);
+    ensure!(if -a / 100 == 0 { b + 1 } else { b - 1 } == a + 1);
+    ensure!(loop { if a < 200 { a += b; b -= 1; } else { break a; } } < 40);
+    Ok((1))
 }
 
 // 实现特性
@@ -160,4 +172,45 @@ fn main() {
     println!("Your system os is {}", OS);
 
     // 线程通信&互斥锁
+
+    // rand
+    if rand::random() { // generates a boolean
+        // Try printing a random unicode code point (probably a bad idea)!
+        println!("char: {}", rand::random::<char>());
+    }
+    let mut rng = rand::thread_rng();
+    let y: f64 = rng.gen(); // generates a float between 0 and 1
+
+    let s: i64 = rand::thread_rng().gen();
+    println!("y: {}", y);
+    println!("s: {}", s);
+    let mut nums: Vec<i32> = (1..100).collect();
+    nums.shuffle(&mut rng);
+
+    let user = 1;
+    let ggg = eq0();
+
+    let mut count = 0;
+    loop {
+        count += 1;
+
+        if count ==3 {
+            println!("three");
+            continue;
+        }
+        println!("{}", count);
+        if count ==5 {
+            println!("OK, that's enough!");
+            break
+        }
+    }
 }
+
+// fn main() -> anyhow::Result<()> {
+//     let mut a = 104;
+//     let mut b = 518;
+//     ensure!(a + 10 >= b - 4);
+//     ensure!(if -a / 100 == 0 { b + 1 } else { b - 1 } == a + 1);
+//     ensure!(loop { if a < 200 { a += b; b -= 1; } else { break a; } } < 40);
+//     Ok(())
+// }
