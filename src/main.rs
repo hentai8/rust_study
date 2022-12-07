@@ -1,4 +1,6 @@
 mod redis_local;
+mod error_test;
+mod main_0;
 
 use std::{
     collections::{HashMap, VecDeque},
@@ -9,6 +11,7 @@ use std::{
 use std::future::Future;
 use md5;
 use tokio::io::AsyncReadExt;
+use crate::redis_local::RedisLocal;
 
 #[tokio::main]
 // async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -31,15 +34,21 @@ async fn main() {
     // println!("{}", x);
     // let t = x;
     // let tt = x;
-    let xxx = "huanghuang93".to_string();
-    let result0 = isUserExisted(xxx).await;
-    println!("{:#?}", result0);
-    // call()
 
-    let digest = md5::compute(b"abcdefghijklmnopqrstuvwxyz");
-    assert_eq!(format!("{:x}", digest), "c3fcd3d76192e4007dfb496cca67e13b");
-    let answer = get_worker_id("hentai8.123".to_string());
-    println!("{}", answer);
+
+    // let xxx = "huanghuang93".to_string();
+    // let result0 = isUserExisted(xxx).await;
+    // println!("{:#?}", result0);
+    // // call()
+    //
+    // let digest = md5::compute(b"abcdefghijklmnopqrstuvwxyz");
+    // assert_eq!(format!("{:x}", digest), "c3fcd3d76192e4007dfb496cca67e13b");
+    // let answer = get_worker_id("hentai8.123".to_string());
+    // println!("{}", answer);
+
+    let mut redis_instance = redis_local::RedisLocal::init();
+    redis_instance.do_something().expect("redis error");;
+    error_test::error_test(3);
 }
 
 fn get_worker_id(login: String) -> String{

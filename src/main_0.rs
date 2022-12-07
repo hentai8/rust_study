@@ -7,8 +7,8 @@ use anyhow::*;
 use redis::Commands;
 use redis::Connection;
 
-mod redis_local;
-use crate::redis_local::RedisLocal;
+// mod redis_local;
+// use crate::redis_local::RedisLocal;
 
 #[derive(Debug)]
 struct Test {

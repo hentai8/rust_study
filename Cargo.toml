@@ -8,7 +8,8 @@ edition = "2021"
 [dependencies]
 rand = "0.8.4"
 anyhow = "1.0"
-redis = "0.22.1"
+redis = { version = "0.22.1", features = [ "cluster"] }
+redis-cluster = "0.1.4"
 reqwest = { version = "0.11", features = ["json"] }
 tokio = { version = "1", features = ["full"] }
 md5 = "0.7.0"
