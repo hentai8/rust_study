@@ -21,6 +21,10 @@ lazy_static! {
         x.lock().unwrap().push("111".to_string());
         x
     };
+    static ref HEIGHTNOW: Mutex<i32> = {
+        let mut x = Mutex::new(10);
+        x
+    };
 }
 
 fn times_two(n: u32) -> u32 { n * 2 }
@@ -37,11 +41,35 @@ impl MyStruct {
 }
 
 fn main() {
+    // 定义一个变量
+    let mutex = Mutex::new(10);
+
+    // 获取一个 MutexGuard
+    let mut guard = mutex.lock().unwrap();
+
+    // 通过 MutexGuard 修改变量的值
+    *guard = 100;
+
+    // 使用 guard 访问变量的值
+    println!("The value is: {}", *guard);
+
+
     println!("The map has {} entries.", *COUNT);
     println!("The entry for `0` is \"{}\".", HASHMAP.get(&0).unwrap());
     println!("A expensive calculation on a static results in: {}.", *NUMBER);
-    JOBPOOLS.lock().unwrap().push("nnn".to_string());
+
+    println!("{}", HEIGHTNOW.lock().unwrap());
+    let mut xxx = HEIGHTNOW.lock().unwrap();
+    *xxx = 100;
+    println!("{}", *xxx);
+    // println!("{}", *HEIGHTNOW.lock().unwrap());
+
+
+    JOBPOOLS.lock().unwrap().push("000".to_string());
     println!("{:#?}", JOBPOOLS.lock().unwrap());
+    if JOBPOOLS.lock().unwrap().contains(&"nnn".to_string()) {
+        println!("success");
+    } else { println!("false") }
 
     let mut my_struct = MyStruct {
         job_pools: vec![String::from("hello"), String::from("world")],
