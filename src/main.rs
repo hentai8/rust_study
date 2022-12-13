@@ -21,7 +21,7 @@ lazy_static! {
         x.lock().unwrap().push("111".to_string());
         x
     };
-    static ref HEIGHTNOW: Mutex<i32> = {
+    static ref HEIGHTNOW: Mutex<u32> = {
         let mut x = Mutex::new(10);
         x
     };
