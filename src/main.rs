@@ -1,88 +1,83 @@
-use std::borrow::Borrow;
-use std::sync::{Arc, Mutex};
+mod redis_local;
+mod error_test;
+mod main_1;
+mod user;
+mod random;
 
-#[macro_use]
-extern crate lazy_static;
+use std::{
+    collections::{HashMap, VecDeque},
+    fs::create_dir_all,
+    sync::{atomic::AtomicBool, Arc, Mutex},
+    // time::{Duration, Instant},
+};
+use std::alloc::System;
+use std::future::Future;
+use time::Duration;
+use std::time::{SystemTime, UNIX_EPOCH};
+use tokio::io::AsyncReadExt;
+use crate::redis_local::RedisLocal;
+use user::get_worker_id;
+use random::rng_local;
+use redis::cluster::ClusterConnection;
 
-use std::collections::HashMap;
 
-lazy_static! {
-    static ref HASHMAP: HashMap<u32, &'static str> = {
-        let mut m = HashMap::new();
-        m.insert(0, "foo");
-        m.insert(1, "bar");
-        m.insert(2, "baz");
-        m
-    };
-    static ref COUNT: usize = HASHMAP.len();
-    static ref NUMBER: u32 = times_two(21);
-    static ref JOBPOOLS: Mutex<Vec<String>> = {
-        let mut x = Mutex::new(vec!["null".to_string()]);
-        x.lock().unwrap().push("111".to_string());
-        x
-    };
-    static ref HEIGHTNOW: Mutex<u32> = {
-        let mut x = Mutex::new(10);
-        x
-    };
+
+pub struct Server0 {
+    pub(crate) redis_connection: ClusterConnection,
 }
 
-fn times_two(n: u32) -> u32 { n * 2 }
 
 
-struct MyStruct {
-    job_pools: Vec<String>,
+#[tokio::main]
+async fn main() {
+    println!("123");
+    let k = "k3".to_string();
+    let v = "v3334".to_string();
+    // let mut r_conn = redis_local::RedisLocal::redis_connect();
+    // redis_local::RedisLocal::do_something(&mut r_conn).expect("redis error");
+
+    let mut red = RedisLocal::init();
+    red.set(k, v).await.expect("TODO: panic message");
+
+    // // 原子安全的写法
+    // let mut arc = Arc::new(Mutex::new(redis_local::RedisLocal::init()));
+    // arc.lock().unwrap().set(k, v).expect("panic message");
+    //
+    //
+    // let k1 = "k11".to_string();
+    // let v1 = "v112".to_string();
+    // let mut redis_instance = redis_local::RedisLocal::init();
+    // redis_instance.set(k1, v1).expect("panic message");
+    //
+    // let k1 = "k11".to_string();
+    // let v1_result = redis_instance.get(k1);
+    // print!("v1_result :{}", v1_result);
+    //
+    // let k1 = "k11".to_string();
+    // let v1 = "v112".to_string();
+    // redis_instance.setnx(k1, v1).expect("panic message");
+
+
 }
 
-impl MyStruct {
-    fn add_string(&mut self, string: String) {
-        self.job_pools.push(string);
+pub async fn isUserExisted(user: String) -> String {
+    let mut url :String = "https://www.dxpool.net/api/".to_string();
+    let path :String = "user/".to_string();
+    url += &*path;
+    url += &*user;
+    println!("{}", url);
+    let resp = reqwest::get(url)
+        .await.unwrap()
+        .text()
+        // .json::<String>()
+        // .json::<HashMap<String, String>>()
+        .await.unwrap();
+    println!("{:#?}", resp);
+    if resp == "false" {
+        println!("123");
     }
+    // println!("{}", resp["origin"]);
+    // Ok(())
+    resp
 }
 
-fn main() {
-    // 定义一个变量
-    let mutex = Mutex::new(10);
-
-    // 获取一个 MutexGuard
-    let mut guard = mutex.lock().unwrap();
-
-    // 通过 MutexGuard 修改变量的值
-    *guard = 100;
-
-    // 使用 guard 访问变量的值
-    println!("The value is: {}", *guard);
-
-
-    println!("The map has {} entries.", *COUNT);
-    println!("The entry for `0` is \"{}\".", HASHMAP.get(&0).unwrap());
-    println!("A expensive calculation on a static results in: {}.", *NUMBER);
-
-    println!("{}", HEIGHTNOW.lock().unwrap());
-    let mut xxx = HEIGHTNOW.lock().unwrap();
-    *xxx = 100;
-    println!("{}", *xxx);
-    // println!("{}", *HEIGHTNOW.lock().unwrap());
-
-
-    JOBPOOLS.lock().unwrap().push("000".to_string());
-    println!("{:#?}", JOBPOOLS.lock().unwrap());
-    if JOBPOOLS.lock().unwrap().contains(&"nnn".to_string()) {
-        println!("success");
-    } else { println!("false") }
-
-    let mut my_struct = MyStruct {
-        job_pools: vec![String::from("hello"), String::from("world")],
-    };
-    println!("{:#?}", my_struct.job_pools);
-    my_struct.add_string("!".to_string());
-    println!("{:#?}", my_struct.job_pools);
-
-// let my_struct = Arc::new(MyStruct {
-//     job_pools: vec![String::from("hello"), String::from("world")],
-// });
-// let cloned = my_struct.clone();
-// println!("{:#?}", cloned.job_pools);
-// my_struct.add_string("!".to_string());
-// println!("{:#?}", cloned.job_pools);
-}

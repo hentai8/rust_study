@@ -8,7 +8,7 @@ use redis::ConnectionLike;
 use anyhow::Result;
 
 pub struct RedisLocal {
-    redis_connection: ClusterConnection,
+    pub(crate) redis_connection: ClusterConnection,
 }
 
 impl RedisLocal {
@@ -19,19 +19,19 @@ impl RedisLocal {
         RedisLocal { redis_connection }
     }
 
-    pub fn do_something(&mut self) -> anyhow::Result<()> {
+    pub async fn do_something(&mut self) -> anyhow::Result<()> {
         let _: () = self.redis_connection.set("{stratum}:aleo:something", "yes").unwrap();
         println!("Success connect to redis");
         Ok(())
     }
 
-    pub fn set(&mut self, key: String, value: String) -> anyhow::Result<()> {
+    pub async fn set(&mut self, key: String, value: String) -> anyhow::Result<()> {
         let mut key0 = "{stratum}:aleo:".to_string();
         key0 += &*key;
         let _: () = self.redis_connection.set(key0, value).unwrap();
         Ok(())
     }
-    pub fn hset(&mut self, key: String, field: String, value: String) -> anyhow::Result<()> {
+    pub async fn hset(&mut self, key: String, field: String, value: String) -> anyhow::Result<()> {
         let mut key0 = "{stratum}:aleo:".to_string();
         key0 += &*key;
         let _: () = self.redis_connection.hset(key0, field, value).unwrap();
@@ -39,7 +39,7 @@ impl RedisLocal {
     }
 
 
-    pub fn setnx(&mut self, key: String, value: String) -> anyhow::Result<()> {
+    pub async fn setnx(&mut self, key: String, value: String) -> anyhow::Result<()> {
         let mut key0 = "{stratum}:aleo:".to_string();
         key0 += &*key;
         let _: () = self.redis_connection.set_nx(key0, value).unwrap();
@@ -53,16 +53,16 @@ impl RedisLocal {
     //     result
     // }
 
-    pub fn get(&mut self, key: String) -> String {
+    pub async fn get(&mut self, key: String) -> String {
         let mut key0 = "{stratum}:aleo:".to_string();
         key0 += &*key;
         let result: String = self.redis_connection.get(key0).unwrap();
         result
     }
-    pub fn hincr(&mut self, key: String, field: String, increment: i64) -> anyhow::Result<()> {
+    pub async fn hincr(&mut self, key: String, field: String, increment: i64) -> anyhow::Result<()> {
         let mut key0 = "{stratum}:aleo:".to_string();
         key0 += &*key;
-        let result: String = self.redis_connection.hincr(key0, field, increment).unwrap();
+        let _: () = self.redis_connection.hincr(key0, field, increment).unwrap();
         // result
         Ok(())
     }

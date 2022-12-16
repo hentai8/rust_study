@@ -1,6 +1,6 @@
 mod redis_local;
 mod error_test;
-mod main_0;
+mod main_1;
 mod user;
 mod random;
 
@@ -42,9 +42,9 @@ async fn main() {
     // let tt = x;
 
 
-    // let xxx = "huanghuang93".to_string();
-    // let result0 = isUserExisted(xxx).await;
-    // println!("{:#?}", result0);
+    let xxx = "hentai8".to_string();
+    let result0 = isUserExisted(xxx).await;
+    println!("{:#?}", result0);
     // // call()
     //
     // let digest = md5::compute(b"abcdefghijklmnopqrstuvwxyz");
@@ -83,8 +83,8 @@ async fn main() {
 //     result0
 // }
 
-async fn isUserExisted(user: String) -> String {
-    let mut url :String = "http://dx.ichains.vip/api/".to_string();
+pub async fn isUserExisted(user: String) -> String {
+    let mut url :String = "https://www.dxpool.net/api/".to_string();
     let path :String = "user/".to_string();
     url += &*path;
     url += &*user;
