@@ -21,11 +21,19 @@ use random::rng_local;
 use redis::cluster::ClusterConnection;
 
 
+//
+// pub struct Server0 {
+//     pub(crate) redis_connection: ClusterConnection,
+// }
 
-pub struct Server0 {
-    pub(crate) redis_connection: ClusterConnection,
+
+pub struct StructTest0 {
+    attribute0: Vec<StructTest1>
 }
-
+#[derive(Debug)]
+pub struct StructTest1 {
+    attribute1: String,
+}
 
 
 #[tokio::main]
@@ -56,6 +64,14 @@ async fn main() {
     // let k1 = "k11".to_string();
     // let v1 = "v112".to_string();
     // redis_instance.setnx(k1, v1).expect("panic message");
+
+    let mut nodes = vec![];
+    for i in 0..20 {
+        let s = StructTest1{attribute1: i.to_string()};
+        nodes.insert(i, s)
+    }
+    println!("nodes: {:#?}", nodes);
+    // println!("nodes: {:#?}", nodes);
 
 
 }
