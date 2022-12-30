@@ -28,12 +28,22 @@ use redis::cluster::ClusterConnection;
 
 
 pub struct StructTest0 {
-    attribute0: Vec<StructTest1>
+    attribute0: Vec<StructTest1>,
 }
+
 #[derive(Debug)]
+#[derive(Clone)]
 pub struct StructTest1 {
     attribute1: String,
 }
+
+// impl Copy for StructTest1 {}
+//
+// impl Clone for StructTest1 {
+//     fn clone(&self) -> StructTest1 {
+//         *self
+//     }
+// }
 
 
 #[tokio::main]
@@ -67,18 +77,32 @@ async fn main() {
 
     let mut nodes = vec![];
     for i in 0..20 {
-        let s = StructTest1{attribute1: i.to_string()};
+        let s = StructTest1 { attribute1: i.to_string() };
         nodes.insert(i, s)
     }
-    println!("nodes: {:#?}", nodes);
+    let mut nodes1 = nodes.clone();
+    do_something(nodes).await;
+    println!("nodes: {:#?}", nodes1);
     // println!("nodes: {:#?}", nodes);
+    let mut x = 1;
+    let mut y = add1(x);
+    println!("x: {x}");
+    println!("x: {x}");
+    println!("y: {y}");
+}
 
+pub async fn do_something(nodes: Vec<StructTest1>) -> String {
+    let x = nodes;
+    "sss".to_string()
+}
 
+pub fn add1(x: i32) -> i32 {
+    x + 1
 }
 
 pub async fn isUserExisted(user: String) -> String {
-    let mut url :String = "https://www.dxpool.net/api/".to_string();
-    let path :String = "user/".to_string();
+    let mut url: String = "https://www.dxpool.net/api/".to_string();
+    let path: String = "user/".to_string();
     url += &*path;
     url += &*user;
     println!("{}", url);
