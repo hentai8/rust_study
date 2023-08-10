@@ -1,2 +1,3 @@
-# Rust Study Followed by 《rust编程 从入门到实战》
+# Rust Study Followed by 《rust语言圣经》
 
+https://course.rs/about-book.html
