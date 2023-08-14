@@ -17,6 +17,22 @@ fn add_with_extra(x: i32, y: i32) -> i32 {
     x + y // 表达式
 }
 
+fn ret_unit_type() {
+    let x = 1;
+    // if 语句块也是一个表达式，因此可以用于赋值，也可以直接返回
+    // 类似三元运算符，在Rust里我们可以这样写
+    let y = if x % 2 == 1 {
+        "odd"
+    } else {
+        "even"
+    };
+    let z = if x % 2 == 1 {
+        "odd"
+    } else {
+        "even"
+    };
+}
+
 fn main() {
     let x = 5;
     let y = {
@@ -31,5 +47,6 @@ fn main() {
     // f64是float64的简写
     let b: Vec<f64> = Vec::new();
     let (a, c) = ("hi", false);
-    report(1)
+    report(1);
+    assert_eq!(ret_unit_type(), ());
 }
